@@ -72,7 +72,7 @@ def process_trip(trip: Trip) -> ProcessedTrip:
 
 
 def build_partition(partition: str, root=None, trip_ids=None, verbose=True):
-    """Process every trip in a partition and write parquet files to
+    """Process every trip in a partition and write CSV files to
     ``data_processed/<partition>/``."""
     out = config.PROCESSED_DIR / partition
     out.mkdir(parents=True, exist_ok=True)
@@ -91,7 +91,7 @@ def build_partition(partition: str, root=None, trip_ids=None, verbose=True):
     points = pd.concat(pts, ignore_index=True)
     cands = pd.concat(cds, ignore_index=True)
     stats = pd.DataFrame(sts)
-    points.to_parquet(out / "points.parquet", index=False)
-    cands.to_parquet(out / "candidates.parquet", index=False)
+    points.to_csv(out / "points.csv", index=False)
+    cands.to_csv(out / "candidates.csv", index=False)
     stats.to_csv(out / "trip_stats.csv", index=False)
     return points, cands, stats

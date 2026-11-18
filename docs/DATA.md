@@ -134,10 +134,10 @@ exactly what HMM/Viterbi decoding is meant to fix.
 
 ## 8. Output tables for the modelling team
 
-`data_processed/<partition>/candidates.parquet` — one row per (point, candidate):
+`data_processed/<partition>/candidates.csv` — one row per (point, candidate):
 `trip_id, point_pos, arc_id, canon_arc, <FEATURE_COLUMNS>, label, label_valid`
 
-`data_processed/<partition>/points.parquet` — one row per cleaned observation:
+`data_processed/<partition>/points.csv` — one row per cleaned observation:
 `trip_id, point_pos, orig_idx, lon, lat, t, x, y, segment_id, speed_mps,
 heading_deg, …, true_arc, true_dist_m, label_valid`
 

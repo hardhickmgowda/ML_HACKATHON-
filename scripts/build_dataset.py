@@ -3,8 +3,8 @@
 Usage:  python scripts/build_dataset.py [--partitions train student_test]
 
 Writes, per partition, to data_processed/<partition>/:
-    points.parquet       one row per cleaned GPS observation (+ labels)
-    candidates.parquet   one row per (observation, candidate arc) with
+    points.csv           one row per cleaned GPS observation (+ labels)
+    candidates.csv       one row per (observation, candidate arc) with
                          FEATURE_COLUMNS, `label` and `label_valid`
     trip_stats.csv       cleaning / candidate / labelling stats per trip
 

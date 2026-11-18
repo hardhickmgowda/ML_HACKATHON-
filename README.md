@@ -14,7 +14,7 @@ scripts/             runnable entry points
 tests/               pytest suite
 docs/DATA.md         dataset documentation + EDA findings
 results/             generated tables, plots, maps (committed)
-data_processed/      generated parquet tables (git-ignored, rebuild with scripts)
+data_processed/      generated CSV tables (git-ignored, rebuild with scripts)
 ```
 
 ## Setup

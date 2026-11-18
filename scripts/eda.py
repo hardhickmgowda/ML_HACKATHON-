@@ -23,7 +23,7 @@ import pandas as pd  # noqa: E402
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from pathsnap import config  # noqa: E402
 from pathsnap.data import load_trip  # noqa: E402
-from pathsnap.data.geo import angle_diff_deg  # noqa: E402
+from pathsnap.data.dataset import read_processed  # noqa: E402
 from pathsnap.data.pipeline import process_trip  # noqa: E402
 from pathsnap.viz.maps import trip_map  # noqa: E402
 
@@ -43,9 +43,8 @@ def save(fig, name):
 
 
 def load_processed(part):
-    d = config.PROCESSED_DIR / part
-    return (pd.read_parquet(d / "points.parquet"), pd.read_parquet(d / "candidates.parquet"),
-            pd.read_csv(d / "trip_stats.csv", dtype={"trip_id": str}))
+    return (read_processed(part, "points"), read_processed(part, "candidates"),
+            read_processed(part, "trip_stats"))
 
 
 def main():

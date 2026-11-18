@@ -53,11 +53,17 @@ class Split:
         return len(self.frame)
 
 
-def load_split(partition: str, reliable_only: bool = True) -> Split:
-    path = config.PROCESSED_DIR / partition / "candidates.parquet"
+def read_processed(partition: str, table: str) -> pd.DataFrame:
+    """Read data_processed/<partition>/<table>.csv. trip_id is kept as a
+    zero-padded string ('00000001') so it still matches the data folders."""
+    path = config.PROCESSED_DIR / partition / f"{table}.csv"
     if not path.exists():
         raise FileNotFoundError(f"{path} missing - run `python scripts/build_dataset.py` first")
-    df = pd.read_parquet(path)
+    return pd.read_csv(path, dtype={"trip_id": str})
+
+
+def load_split(partition: str, reliable_only: bool = True) -> Split:
+    df = read_processed(partition, "candidates")
     if reliable_only and "label_valid" in df:
         df = df[df["label_valid"]]
     df = df.sort_values(["trip_id", "point_pos", "dist_rank"]).reset_index(drop=True)
