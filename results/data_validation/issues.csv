@@ -1,0 +1,129 @@
+trip_id,severity,check,detail
+00000001,WARNING,time_gaps,1 gaps > 10s (max 16s)
+00000001,WARNING,speed_spikes,1 steps faster than 70.0 m/s
+00000001,WARNING,duplicate_arcs,"292 duplicate (u,v) arcs"
+00000002,WARNING,time_gaps,41 gaps > 10s (max 160s)
+00000002,WARNING,route_discontinuous,1 breaks between consecutive arcs
+00000002,WARNING,route_partial_coverage,12% of GPS points >50 m from the reference route (track 55.9 km vs route 8.0 km)
+00000003,WARNING,duplicate_arcs,"6 duplicate (u,v) arcs"
+00000004,WARNING,time_gaps,215 gaps > 10s (max 51s)
+00000004,WARNING,duplicate_arcs,"5 duplicate (u,v) arcs"
+00000006,WARNING,time_gaps,5 gaps > 10s (max 301s)
+00000008,WARNING,speed_spikes,1 steps faster than 70.0 m/s
+00000008,WARNING,duplicate_arcs,"12 duplicate (u,v) arcs"
+00000010,WARNING,duplicate_arcs,"7 duplicate (u,v) arcs"
+00000011,WARNING,time_gaps,1 gaps > 10s (max 909s)
+00000013,WARNING,speed_spikes,95 steps faster than 70.0 m/s
+00000013,WARNING,duplicate_arcs,"129 duplicate (u,v) arcs"
+00000014,WARNING,time_gaps,5 gaps > 10s (max 72s)
+00000014,WARNING,duplicate_arcs,"2 duplicate (u,v) arcs"
+00000016,WARNING,duplicate_arcs,"1 duplicate (u,v) arcs"
+00000019,WARNING,duplicate_arcs,"86 duplicate (u,v) arcs"
+00000019,WARNING,route_discontinuous,3 breaks between consecutive arcs
+00000021,WARNING,time_gaps,2 gaps > 10s (max 2161s)
+00000022,WARNING,time_gaps,9 gaps > 10s (max 22s)
+00000022,WARNING,duplicate_arcs,"4 duplicate (u,v) arcs"
+00000024,WARNING,time_gaps,2 gaps > 10s (max 458s)
+00000024,WARNING,duplicate_arcs,"102 duplicate (u,v) arcs"
+00000025,WARNING,duplicate_arcs,"128 duplicate (u,v) arcs"
+00000026,WARNING,time_gaps,23 gaps > 10s (max 17s)
+00000026,WARNING,duplicate_arcs,"2 duplicate (u,v) arcs"
+00000028,WARNING,time_gaps,6 gaps > 10s (max 196s)
+00000028,WARNING,duplicate_arcs,"8 duplicate (u,v) arcs"
+00000029,WARNING,duplicate_arcs,"9 duplicate (u,v) arcs"
+00000031,WARNING,duplicate_arcs,"4 duplicate (u,v) arcs"
+00000032,WARNING,time_gaps,7 gaps > 10s (max 41s)
+00000032,WARNING,speed_spikes,40 steps faster than 70.0 m/s
+00000032,WARNING,duplicate_arcs,"80 duplicate (u,v) arcs"
+00000033,WARNING,speed_spikes,1 steps faster than 70.0 m/s
+00000033,WARNING,duplicate_arcs,"2 duplicate (u,v) arcs"
+00000033,WARNING,route_discontinuous,1 breaks between consecutive arcs
+00000033,WARNING,route_partial_coverage,59% of GPS points >50 m from the reference route (track 47.8 km vs route 6.4 km)
+00000034,WARNING,time_gaps,2 gaps > 10s (max 15s)
+00000034,WARNING,duplicate_arcs,"4 duplicate (u,v) arcs"
+00000035,WARNING,duplicate_arcs,"38 duplicate (u,v) arcs"
+00000037,WARNING,time_gaps,8 gaps > 10s (max 52s)
+00000037,WARNING,duplicate_arcs,"2 duplicate (u,v) arcs"
+00000038,WARNING,time_gaps,3 gaps > 10s (max 20s)
+00000038,WARNING,duplicate_arcs,"1 duplicate (u,v) arcs"
+00000041,WARNING,time_gaps,1 gaps > 10s (max 89s)
+00000041,WARNING,duplicate_arcs,"2 duplicate (u,v) arcs"
+00000041,WARNING,route_discontinuous,1 breaks between consecutive arcs
+00000042,WARNING,time_gaps,37 gaps > 10s (max 670s)
+00000042,WARNING,route_discontinuous,1 breaks between consecutive arcs
+00000043,WARNING,time_gaps,3 gaps > 10s (max 230s)
+00000043,WARNING,speed_spikes,2 steps faster than 70.0 m/s
+00000043,WARNING,duplicate_arcs,"322 duplicate (u,v) arcs"
+00000043,WARNING,route_partial_coverage,7% of GPS points >50 m from the reference route (track 63.7 km vs route 59.2 km)
+00000044,WARNING,time_gaps,2 gaps > 10s (max 341s)
+00000044,WARNING,duplicate_arcs,"2 duplicate (u,v) arcs"
+00000046,WARNING,time_gaps,11 gaps > 10s (max 22s)
+00000047,WARNING,duplicate_arcs,"27 duplicate (u,v) arcs"
+00000050,WARNING,duplicate_arcs,"2 duplicate (u,v) arcs"
+00000053,WARNING,speed_spikes,1 steps faster than 70.0 m/s
+00000053,WARNING,duplicate_arcs,"28 duplicate (u,v) arcs"
+00000054,WARNING,time_gaps,6 gaps > 10s (max 79s)
+00000054,WARNING,duplicate_arcs,"96 duplicate (u,v) arcs"
+00000054,WARNING,route_partial_coverage,87% of GPS points >50 m from the reference route (track 169.3 km vs route 31.4 km)
+00000055,WARNING,time_gaps,1 gaps > 10s (max 184s)
+00000055,WARNING,duplicate_arcs,"12 duplicate (u,v) arcs"
+00000057,WARNING,time_gaps,1 gaps > 10s (max 13s)
+00000057,WARNING,speed_spikes,1 steps faster than 70.0 m/s
+00000057,WARNING,duplicate_arcs,"1 duplicate (u,v) arcs"
+00000058,WARNING,time_gaps,5 gaps > 10s (max 16s)
+00000058,WARNING,duplicate_arcs,"15 duplicate (u,v) arcs"
+00000060,WARNING,time_gaps,3 gaps > 10s (max 27s)
+00000060,WARNING,duplicate_arcs,"2 duplicate (u,v) arcs"
+00000061,WARNING,duplicate_arcs,"8 duplicate (u,v) arcs"
+00000062,WARNING,time_gaps,19 gaps > 10s (max 56s)
+00000062,WARNING,duplicate_arcs,"17 duplicate (u,v) arcs"
+00000063,WARNING,duplicate_arcs,"10 duplicate (u,v) arcs"
+00000064,WARNING,duplicate_arcs,"4 duplicate (u,v) arcs"
+00000068,WARNING,time_gaps,1 gaps > 10s (max 12s)
+00000069,WARNING,time_gaps,2 gaps > 10s (max 2658s)
+00000069,WARNING,route_discontinuous,1 breaks between consecutive arcs
+00000070,WARNING,time_gaps,1 gaps > 10s (max 152s)
+00000072,WARNING,duplicate_arcs,"2 duplicate (u,v) arcs"
+00000074,WARNING,time_gaps,7 gaps > 10s (max 24s)
+00000074,WARNING,duplicate_arcs,"96 duplicate (u,v) arcs"
+00000075,WARNING,route_discontinuous,2 breaks between consecutive arcs
+00000078,WARNING,time_gaps,25 gaps > 10s (max 52810s)
+00000078,WARNING,duplicate_arcs,"38 duplicate (u,v) arcs"
+00000079,WARNING,speed_spikes,2 steps faster than 70.0 m/s
+00000079,WARNING,duplicate_arcs,"27 duplicate (u,v) arcs"
+00000080,WARNING,time_gaps,7 gaps > 10s (max 59s)
+00000080,WARNING,duplicate_arcs,"10 duplicate (u,v) arcs"
+00000080,WARNING,route_discontinuous,1 breaks between consecutive arcs
+00000081,WARNING,time_gaps,86 gaps > 10s (max 536s)
+00000081,WARNING,duplicate_arcs,"6 duplicate (u,v) arcs"
+00000082,WARNING,duplicate_arcs,"2 duplicate (u,v) arcs"
+00000083,WARNING,duplicate_arcs,"3 duplicate (u,v) arcs"
+00000084,WARNING,time_gaps,4 gaps > 10s (max 312s)
+00000084,WARNING,duplicate_arcs,"13 duplicate (u,v) arcs"
+00000085,WARNING,time_gaps,5 gaps > 10s (max 70s)
+00000086,WARNING,duplicate_arcs,"63 duplicate (u,v) arcs"
+00000086,WARNING,route_discontinuous,1 breaks between consecutive arcs
+00000088,WARNING,time_gaps,9 gaps > 10s (max 232s)
+00000088,WARNING,duplicate_arcs,"2 duplicate (u,v) arcs"
+00000089,WARNING,time_gaps,12 gaps > 10s (max 193s)
+00000089,WARNING,route_discontinuous,1 breaks between consecutive arcs
+00000090,WARNING,time_gaps,6 gaps > 10s (max 153064s)
+00000092,WARNING,speed_spikes,3 steps faster than 70.0 m/s
+00000092,WARNING,duplicate_arcs,"4 duplicate (u,v) arcs"
+00000093,WARNING,duplicate_arcs,"17 duplicate (u,v) arcs"
+00000096,WARNING,duplicate_arcs,"3 duplicate (u,v) arcs"
+00000098,WARNING,time_gaps,5 gaps > 10s (max 50s)
+00000098,WARNING,duplicate_arcs,"10 duplicate (u,v) arcs"
+00000099,WARNING,time_gaps,1 gaps > 10s (max 25s)
+00000099,WARNING,duplicate_arcs,"7 duplicate (u,v) arcs"
+00000000,WARNING,duplicate_arcs,"6 duplicate (u,v) arcs"
+00000009,WARNING,duplicate_arcs,"62 duplicate (u,v) arcs"
+00000040,WARNING,speed_spikes,1 steps faster than 70.0 m/s
+00000052,WARNING,duplicate_arcs,"2 duplicate (u,v) arcs"
+00000056,WARNING,duplicate_arcs,"22 duplicate (u,v) arcs"
+00000065,WARNING,time_gaps,3 gaps > 10s (max 210s)
+00000065,WARNING,duplicate_arcs,"4 duplicate (u,v) arcs"
+00000076,WARNING,time_gaps,24 gaps > 10s (max 32s)
+00000076,WARNING,duplicate_arcs,"29 duplicate (u,v) arcs"
+00000076,WARNING,route_discontinuous,1 breaks between consecutive arcs
+00000091,WARNING,duplicate_arcs,"3 duplicate (u,v) arcs"
