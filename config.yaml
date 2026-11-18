@@ -1,0 +1,48 @@
+# PathSnap configuration -- single source of truth for every tunable number.
+seed: 42
+
+paths:
+  data_root: "data"                 # contains train/ and student_test/ (and evaluation/ on the day)
+  train_dir: "train"
+  test_dir: "student_test"
+  eval_dirs: ["student_test", "evaluation"]   # folders the API scans for trips
+  artifacts: "artifacts"
+  results: "results"
+
+preprocess:
+  max_speed_mps: 60.0               # drop GPS jumps faster than this
+  smooth_window: 3                  # rolling-median window (odd); 1 disables smoothing
+  heading_min_disp_m: 3.0           # below this displacement heading is "invalid"
+
+candidates:
+  radius_m: 50.0
+  fallback_radius_m: 150.0          # used only when no arc lies within radius_m
+  max_candidates: 12
+  sample_spacing_m: 10.0
+
+labels:
+  radius_m: 40.0                    # GPS point must be this close to its reference arc to be labelled
+  skip_penalty: 0.1                 # DP penalty per skipped route arc
+  min_labeled_frac: 0.5             # trips below this are treated as noisy and excluded from training
+
+training:
+  cv_folds: 5
+  cv_points_per_trip: 120
+  train_points_per_trip: 300
+  knn_max_rows: 60000
+  optuna_trials: 20
+  optuna_points_per_trip: 100
+  optuna_folds: 4
+
+hmm:
+  alpha: 0.7                        # weight of classifier log-prob vs spatial Gaussian in emission
+  sigma_m: 15.0
+  beta0_m: 8.0                      # transition scale (metres) at dt=1s
+  beta_per_s: 1.0                   # extra scale per second of GPS gap
+  invalid_penalty: 25.0             # log-penalty for unreachable transition
+  uturn_penalty: 6.0
+  gap_seconds: 180.0                # hard restart when the time gap exceeds this
+  gap_metres: 3000.0
+  max_sp_limit_m: 3000.0
+  fill_limit_m: 4000.0
+  normalize_per_point: true

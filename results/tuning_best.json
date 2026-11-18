@@ -1,0 +1,14 @@
+{
+  "model": "hgb",
+  "best_params": {
+    "max_iter": 150,
+    "learning_rate": 0.09966865579416873,
+    "max_leaf_nodes": 38,
+    "min_samples_leaf": 180,
+    "l2_regularization": 2.7115459638416577,
+    "max_depth": 10
+  },
+  "best_cv_macro_f1": 0.951094938731349,
+  "default_cv_macro_f1_other_sample": 0.947702237218542,
+  "n_trials": 20
+}

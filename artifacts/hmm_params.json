@@ -1,0 +1,13 @@
+{
+  "alpha": 0.2294920160276579,
+  "sigma_m": 26.173235465214557,
+  "beta0_m": 7.6308394384457925,
+  "beta_per_s": 2.1964341028289653,
+  "invalid_penalty": 35.31258340783076,
+  "uturn_penalty": 10.856416886575362,
+  "gap_seconds": 180.0,
+  "gap_metres": 3000.0,
+  "max_sp_limit_m": 3000.0,
+  "fill_limit_m": 4000.0,
+  "normalize_per_point": true
+}

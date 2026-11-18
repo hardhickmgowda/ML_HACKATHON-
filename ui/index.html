@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PathSnap – Map-Matching Viewer</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<style>
+  :root { --bg:#f6f7f9; --fg:#1d2330; --card:#fff; --line:#d9dde5; --acc:#2166ac; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#12151c; --fg:#e8ebf2; --card:#1b2030; --line:#2c3347; --acc:#6aa9e9; } }
+  * { box-sizing:border-box } html,body { height:100%; margin:0; font:14px system-ui,sans-serif; background:var(--bg); color:var(--fg) }
+  #app { display:flex; height:100% } aside { width:320px; padding:14px; overflow:auto; background:var(--card); border-right:1px solid var(--line) }
+  #map { flex:1 } h1 { font-size:18px; margin:0 0 10px } label { display:block; margin:10px 0 4px; font-weight:600 }
+  input,select,button { width:100%; padding:8px; border:1px solid var(--line); border-radius:6px; background:var(--bg); color:var(--fg) }
+  button { background:var(--acc); color:#fff; border:0; cursor:pointer; margin-top:10px } button:disabled { opacity:.5 }
+  .row { display:flex; align-items:center; gap:8px; margin:6px 0 } .row input { width:auto }
+  .sw { width:22px; height:4px; border-radius:2px; display:inline-block }
+  table { width:100%; border-collapse:collapse; margin-top:8px } td { padding:3px 0; border-bottom:1px solid var(--line) } td:last-child { text-align:right; font-variant-numeric:tabular-nums }
+  #status { margin-top:8px; min-height:18px; color:var(--acc) } .err { color:#c0392b !important }
+</style>
+</head>
+<body>
+<div id="app">
+  <aside>
+    <h1>PathSnap viewer</h1>
+    <label for="api">API address (Laptop 1)</label>
+    <input id="api" placeholder="http://192.168.x.x:8000">
+    <button id="load">Connect &amp; load trips</button>
+    <label for="trip">Trip</label>
+    <select id="trip"></select>
+    <button id="run" disabled>Match route</button>
+    <div id="status"></div>
+    <label>Layers</label>
+    <div class="row"><input type="checkbox" id="l_raw" checked><span class="sw" style="background:#666"></span>Raw GPS</div>
+    <div class="row"><input type="checkbox" id="l_clf"><span class="sw" style="background:#f39c12"></span>Classifier only</div>
+    <div class="row"><input type="checkbox" id="l_hmm" checked><span class="sw" style="background:#2166ac"></span>Classifier + HMM</div>
+    <div class="row"><input type="checkbox" id="l_ref" checked><span class="sw" style="background:#1a9850"></span>Reference route</div>
+    <table id="stats"></table>
+  </aside>
+  <div id="map"></div>
+</div>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+const $ = id => document.getElementById(id);
+const map = L.map('map').setView([47.67, 11.03], 12);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {maxZoom: 19, attribution: '© OpenStreetMap'}).addTo(map);
+const layers = {raw: L.layerGroup(), clf: L.layerGroup(), hmm: L.layerGroup(), ref: L.layerGroup()};
+const toggles = {raw: 'l_raw', clf: 'l_clf', hmm: 'l_hmm', ref: 'l_ref'};
+Object.entries(layers).forEach(([k, g]) => { if ($(toggles[k]).checked) g.addTo(map); $(toggles[k]).onchange = e => e.target.checked ? g.addTo(map) : map.removeLayer(g); });
+$('api').value = location.protocol.startsWith('http') && location.port ? location.origin : '';
+const base = () => $('api').value.replace(/\/+$/, '');
+const status = (t, err) => { $('status').textContent = t; $('status').className = err ? 'err' : ''; };
+const pct = v => v == null ? '–' : (100 * v).toFixed(1) + '%';
+
+async function loadTrips() {
+  try {
+    status('Connecting…');
+    const r = await fetch(base() + '/trips'); const j = await r.json();
+    $('trip').innerHTML = j.trips.map(t => `<option value="${t.trip_id}">${t.trip_id} · ${t.n_points} pts${t.has_reference ? ' · ref' : ''}</option>`).join('');
+    $('run').disabled = !j.trips.length; status(`${j.trips.length} trips available`);
+  } catch (e) { status('Cannot reach API: ' + e.message, true); }
+}
+async function run() {
+  $('run').disabled = true; status('Running pipeline…'); const t0 = performance.now();
+  try {
+    const r = await fetch(base() + '/match', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({trip_id: $('trip').value})});
+    if (!r.ok) throw new Error((await r.json()).detail || r.statusText);
+    draw(await r.json()); status(`Done in ${((performance.now() - t0) / 1000).toFixed(1)} s`);
+  } catch (e) { status(e.message, true); } finally { $('run').disabled = false; }
+}
+function draw(d) {
+  Object.values(layers).forEach(g => g.clearLayers());
+  d.track.forEach((p, i) => { if (i % Math.max(1, Math.floor(d.track.length / 3000)) === 0) L.circleMarker(p, {radius: 1.8, color: '#666', weight: 1}).addTo(layers.raw); });
+  if (d.classifier_route) L.polyline(d.classifier_route, {color: '#f39c12', weight: 4, dashArray: '6 6', opacity: .85}).addTo(layers.clf);
+  if (d.route) L.polyline(d.route, {color: '#2166ac', weight: 4, opacity: .9}).addTo(layers.hmm);
+  if (d.reference_route) L.polyline(d.reference_route, {color: '#1a9850', weight: 7, opacity: .35}).addTo(layers.ref);
+  map.fitBounds(L.polyline(d.track).getBounds(), {padding: [20, 20]});
+  const m = d.metrics, rows = [['Points (clean / raw)', `${d.n_points} / ${d.n_points_raw}`], ['Route arcs', d.route_arcs.length],
+    ['HMM restarts / teleports', `${d.hmm.restarts} / ${d.hmm.teleports}`], ['Compute time', d.timing.total_s + ' s']];
+  if (m) rows.push(['Top-1 accuracy: classifier', pct(m.top1_clf)], ['Top-1 accuracy: + HMM', pct(m.top1_hmm)],
+    ['Route F1: classifier', pct(m.route_f1_clf)], ['Route F1: + HMM', pct(m.route_f1_hmm)],
+    ['Continuity: classifier', pct(m.continuity_clf)], ['Continuity: + HMM (filled)', pct(m.continuity_hmm_filled)]);
+  else rows.push(['Reference', 'not available']);
+  $('stats').innerHTML = rows.map(r => `<tr><td>${r[0]}</td><td>${r[1]}</td></tr>`).join('');
+}
+$('load').onclick = loadTrips; $('run').onclick = run; if ($('api').value) loadTrips();
+</script>
+</body>
+</html>
