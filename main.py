@@ -3,8 +3,11 @@
     uvicorn main:app --host 0.0.0.0 --port 8000
 
 Every request runs the full pipeline dynamically: parse files -> clean -> candidates -> features -> classifier -> HMM/Viterbi.
-Nothing is precomputed or hard-coded per trip; drop a new <id>/<id>.{track,nodes,arcs} folder into an evaluation directory
-and it is immediately selectable.
+Nothing is precomputed, cached or hard-coded per trip; drop a new <id>/<id>.{track,nodes,arcs} folder into an evaluation
+directory and it is immediately selectable.
+
+Ground truth stays server-side: the reference .route is read only to compute the accuracy numbers returned in "metrics";
+the reference geometry itself is never sent to the UI.
 """
 from __future__ import annotations
 import os, re, threading, time
@@ -28,7 +31,6 @@ app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], all
 
 _pipe: PathSnapPipeline | None = None
 _lock = threading.Lock()                 # pipeline is CPU-bound; serialise to keep latency predictable
-_cache: dict[str, dict] = {}
 
 
 def data_roots() -> list[Path]:
@@ -36,6 +38,9 @@ def data_roots() -> list[Path]:
     if env:
         return [Path(p) for p in env.split(os.pathsep) if p]
     root = resolve(cfg["paths"]["data_root"])
+    ev = root / "evaluation"
+    if ev.is_dir() and discover_trips([ev]):            # evaluation day: show only the 10 reserved trips
+        return [ev]
     return [root / d for d in cfg["paths"]["eval_dirs"]]
 
 
@@ -83,20 +88,22 @@ def _match(trip_id: str, with_clf: bool) -> dict:
     folder = discover_trips(data_roots()).get(trip_id)
     if folder is None:
         raise HTTPException(404, f"trip {trip_id} not found in {[str(r) for r in data_roots()]}")
-    key = f"{trip_id}:{with_clf}"
-    if key in _cache:
-        return {**_cache[key], "cached": True}
+    log.info("request trip=%s -> running full pipeline", trip_id)
     with _lock:
         t0 = time.time()
         r = pipeline().run(folder, trip_id)
-    r = {k: v for k, v in r.items() if not k.startswith("_")}
+    r = {k: v for k, v in r.items() if not k.startswith("_") and k != "reference_route"}   # ground truth never leaves the server
     if not with_clf:
         r["classifier_route"] = None
     r["model"] = pipeline().bundle["name"]
-    r["cached"] = False
-    _cache[key] = r
-    log.info("matched %s: %d pts in %.2fs", trip_id, r["n_points"], time.time() - t0)
+    m = r["metrics"] or {}
+    log.info("matched %s: %d pts, %d route arcs, top1 clf=%s hmm=%s, route F1 hmm=%s, %.2fs", trip_id, r["n_points"],
+             len(r["route_arcs"]), _f(m.get("top1_clf")), _f(m.get("top1_hmm")), _f(m.get("route_f1_hmm")), time.time() - t0)
     return r
+
+
+def _f(v):
+    return "n/a" if v is None else f"{v:.3f}"
 
 
 @app.post("/match")
@@ -107,12 +114,6 @@ def match(req: MatchRequest):
 @app.get("/match/{trip_id}")
 def match_get(trip_id: str, classifier: bool = True):
     return _match(trip_id, classifier)
-
-
-@app.delete("/cache")
-def clear_cache():
-    _cache.clear()
-    return {"cleared": True}
 
 
 @app.get("/")

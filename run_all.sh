@@ -6,3 +6,4 @@ python scripts/02_train_compare.py   # 5 models, GroupKFold-by-trip CV, saves ar
 python scripts/03_tune_best.py       # Optuna TPE on the winner, saves artifacts/model.joblib + OOF scores
 python scripts/04_tune_hmm.py        # Optuna TPE on HMM params using OOF scores, saves artifacts/hmm_params.json
 python scripts/05_evaluate.py        # FIRST and only use of student_test: tables + folium maps in results/
+python scripts/06_report_figures.py  # extra experiments + every figure/table used in the technical report -> results/report/

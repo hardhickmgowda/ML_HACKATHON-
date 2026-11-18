@@ -33,7 +33,6 @@
     <div class="row"><input type="checkbox" id="l_raw" checked><span class="sw" style="background:#666"></span>Raw GPS</div>
     <div class="row"><input type="checkbox" id="l_clf"><span class="sw" style="background:#f39c12"></span>Classifier only</div>
     <div class="row"><input type="checkbox" id="l_hmm" checked><span class="sw" style="background:#2166ac"></span>Classifier + HMM</div>
-    <div class="row"><input type="checkbox" id="l_ref" checked><span class="sw" style="background:#1a9850"></span>Reference route</div>
     <table id="stats"></table>
   </aside>
   <div id="map"></div>
@@ -43,8 +42,8 @@
 const $ = id => document.getElementById(id);
 const map = L.map('map').setView([47.67, 11.03], 12);
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {maxZoom: 19, attribution: '© OpenStreetMap'}).addTo(map);
-const layers = {raw: L.layerGroup(), clf: L.layerGroup(), hmm: L.layerGroup(), ref: L.layerGroup()};
-const toggles = {raw: 'l_raw', clf: 'l_clf', hmm: 'l_hmm', ref: 'l_ref'};
+const layers = {raw: L.layerGroup(), clf: L.layerGroup(), hmm: L.layerGroup()};
+const toggles = {raw: 'l_raw', clf: 'l_clf', hmm: 'l_hmm'};
 Object.entries(layers).forEach(([k, g]) => { if ($(toggles[k]).checked) g.addTo(map); $(toggles[k]).onchange = e => e.target.checked ? g.addTo(map) : map.removeLayer(g); });
 $('api').value = location.protocol.startsWith('http') && location.port ? location.origin : '';
 const base = () => $('api').value.replace(/\/+$/, '');
@@ -55,7 +54,7 @@ async function loadTrips() {
   try {
     status('Connecting…');
     const r = await fetch(base() + '/trips'); const j = await r.json();
-    $('trip').innerHTML = j.trips.map(t => `<option value="${t.trip_id}">${t.trip_id} · ${t.n_points} pts${t.has_reference ? ' · ref' : ''}</option>`).join('');
+    $('trip').innerHTML = j.trips.map(t => `<option value="${t.trip_id}">${t.trip_id} · ${t.n_points} pts</option>`).join('');
     $('run').disabled = !j.trips.length; status(`${j.trips.length} trips available`);
   } catch (e) { status('Cannot reach API: ' + e.message, true); }
 }
@@ -72,14 +71,13 @@ function draw(d) {
   d.track.forEach((p, i) => { if (i % Math.max(1, Math.floor(d.track.length / 3000)) === 0) L.circleMarker(p, {radius: 1.8, color: '#666', weight: 1}).addTo(layers.raw); });
   if (d.classifier_route) L.polyline(d.classifier_route, {color: '#f39c12', weight: 4, dashArray: '6 6', opacity: .85}).addTo(layers.clf);
   if (d.route) L.polyline(d.route, {color: '#2166ac', weight: 4, opacity: .9}).addTo(layers.hmm);
-  if (d.reference_route) L.polyline(d.reference_route, {color: '#1a9850', weight: 7, opacity: .35}).addTo(layers.ref);
   map.fitBounds(L.polyline(d.track).getBounds(), {padding: [20, 20]});
   const m = d.metrics, rows = [['Points (clean / raw)', `${d.n_points} / ${d.n_points_raw}`], ['Route arcs', d.route_arcs.length],
     ['HMM restarts / teleports', `${d.hmm.restarts} / ${d.hmm.teleports}`], ['Compute time', d.timing.total_s + ' s']];
   if (m) rows.push(['Top-1 accuracy: classifier', pct(m.top1_clf)], ['Top-1 accuracy: + HMM', pct(m.top1_hmm)],
     ['Route F1: classifier', pct(m.route_f1_clf)], ['Route F1: + HMM', pct(m.route_f1_hmm)],
     ['Continuity: classifier', pct(m.continuity_clf)], ['Continuity: + HMM (filled)', pct(m.continuity_hmm_filled)]);
-  else rows.push(['Reference', 'not available']);
+  else rows.push(['Accuracy', 'no server-side reference for this trip']);
   $('stats').innerHTML = rows.map(r => `<tr><td>${r[0]}</td><td>${r[1]}</td></tr>`).join('');
 }
 $('load').onclick = loadTrips; $('run').onclick = run; if ($('api').value) loadTrips();

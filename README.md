@@ -14,14 +14,17 @@ pathsnap/preprocess.py outlier filter + median smoothing                  [Harsh
 pathsnap/candidates.py cKDTree candidate generation (50 m)                [Harsh]
 pathsnap/features.py   19 GPS-candidate features                          [Harsh]
 pathsnap/labels.py     monotone DP aligning .route to GPS -> 0/1 labels   [Harsh]
-pathsnap/viz.py        Folium maps                                        [Harsh]
+pathsnap/viz/          Folium maps: trip_map.py (results), maps.py (EDA)  [Harsh]
 pathsnap/models.py     5 model families                                   [Debasditya]
 pathsnap/metrics.py    classifier / point / route metrics
 pathsnap/hmm.py        emission, transition, Viterbi, gap handling        [Hardhick]
 pathsnap/pipeline.py   raw trip -> route, used by training AND the API
-scripts/01..05_*.py    reproducible experiment steps
+scripts/01..06_*.py    reproducible experiment steps (06 = report figures)
+scripts/screenshot.mjs headless-Chrome screenshots of maps / UI for the report
 artifacts/             trained models (*.joblib), hmm_params.json, feature cache
 results/               all CSV/JSON result tables + per-trip Folium maps
+results/report/        figures, extra experiment tables, screenshots used in the report
+report/                technical report (PathSnap_Technical_Report.docx)
 ```
 
 ## Install
@@ -39,18 +42,18 @@ Trained artifacts are already in `artifacts/`, so no retraining is needed:
 uvicorn main:app --host 0.0.0.0 --port 8000
 ```
 Find Laptop 1's IP (`ipconfig` / `ip a`) and allow port 8000 through the firewall.
-Endpoints: `GET /health`, `GET /trips`, `POST /match {"trip_id": "00000052"}`, `GET /match/{trip_id}`, `DELETE /cache`.
+Endpoints: `GET /health`, `GET /trips`, `POST /match {"trip_id": "00000052"}`, `GET /match/{trip_id}`.
 Each call runs parse -> clean -> candidates -> features -> classifier -> HMM live (no per-trip shortcuts; the reference
 `.route` is never used for the prediction, only to score it when present).
 
 ## Run the UI (Laptop 2)
 Open `http://<laptop1-ip>:8000/` in a browser (served by the API), **or** open `ui/index.html` locally and type the API
-address. Pick a trip, press *Match route*. Layers: raw GPS, classifier-only, classifier+HMM, reference route.
+address. Pick a trip, press *Match route*. Layers: raw GPS, classifier-only, classifier+HMM. The reference route never leaves the API; only the accuracy numbers computed from it are returned.
 The UI loads Leaflet and map tiles from the internet.
 
 ## Reproduce everything
 ```bash
-./run_all.sh          # ~6 min on one CPU; seeds fixed (config.yaml: seed 42)
+./run_all.sh          # ~9 min on one CPU; seeds fixed (config.yaml: seed 42)
 python tests/test_core.py
 ```
 Student-test data is read only by `scripts/05_evaluate.py`; training, model selection and tuning use `train/` only.
