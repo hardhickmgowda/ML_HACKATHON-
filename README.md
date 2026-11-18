@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # PathSnap – distributed map-matching & route reconstruction
 
 GPS track + road network -> candidate arcs -> ML classifier -> HMM/Viterbi -> connected route.
@@ -55,37 +54,11 @@ The UI loads Leaflet and map tiles from the internet.
 python tests/test_core.py
 ```
 Student-test data is read only by `scripts/05_evaluate.py`; training, model selection and tuning use `train/` only.
-=======
-# PathSnap — Distributed Map-Matching & Route Reconstruction
 
-UE24CS352A Machine Learning Hackathon, PES University.
+## Data pipeline: validation, cleaning, EDA (`pathsnap/data/`) [Harsh]
+The dataset documentation, data-quality findings and preprocessing design decisions are in `docs/DATA.md`.
+These scripts read the raw data from `./Student folder/` (override with `PATHSNAP_DATA=/path/to/data`):
 
-## Repository layout
-
-```
-pathsnap/            Python package
-  config.py          all thresholds / paths (single source of truth)
-  data/              loading, validation, cleaning, candidates, labels, features
-  eval/metrics.py    shared metrics (Top-1, macro F1, log loss, miss rate, continuity)
-  viz/maps.py        Folium map builder (EDA, report, UI)
-scripts/             runnable entry points
-tests/               pytest suite
-docs/DATA.md         dataset documentation + EDA findings
-results/             generated tables, plots, maps (committed)
-data_processed/      generated CSV tables (git-ignored, rebuild with scripts)
-```
-
-## Setup
-
-```bash
-python3 -m venv .venv
-source .venv/bin/activate        # Windows: .venv\Scripts\activate
-pip install -r requirements.txt
-```
-
-Place the organiser data at `./Student folder/` (or set `PATHSNAP_DATA=/path/to/data`).
-
-## Data pipeline
 
 ```bash
 python scripts/validate_data.py   # raw-data checks   -> results/data_validation/
@@ -118,4 +91,3 @@ p = process_trip(load_trip("student_test", "00000000").without_route())
 ```
 
 See `docs/DATA.md` for the dataset description, quality issues and design decisions.
->>>>>>> ce885b0f568122a149790e1ba8f759e16ef5e6d3

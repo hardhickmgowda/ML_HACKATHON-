@@ -1,23 +1,15 @@
-<<<<<<< HEAD
-numpy
-pandas
-scipy
-scikit-learn
+numpy==2.5.5
+pandas==3.1.1
+scipy==1.18.1
+scikit-learn==1.9.1
 lightgbm
 optuna
-folium
+folium==1.0.0
 pyyaml
 joblib
 fastapi
 uvicorn
 httpx
-=======
-numpy==2.5.5
-pandas==3.1.1
-scipy==1.18.1
 matplotlib==3.11.2
-folium==1.0.0
 networkx==3.7
-scikit-learn==1.9.1
 pytest==9.2.0
->>>>>>> ce885b0f568122a149790e1ba8f759e16ef5e6d3
